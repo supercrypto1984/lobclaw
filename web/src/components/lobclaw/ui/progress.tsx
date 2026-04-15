@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 
-import { cn } from "@/lib/LobClaw/utils";
+import { cn } from "../../../lib/lobclaw/utils";
 
 function Progress({
   className,

@@ -165,6 +165,17 @@ func SetApiRouter(router *gin.Engine) {
 		apiRouter.GET("/subscription/epay/notify", controller.SubscriptionEpayNotify)
 		apiRouter.GET("/subscription/epay/return", controller.SubscriptionEpayReturn)
 		apiRouter.POST("/subscription/epay/return", controller.SubscriptionEpayReturn)
+
+		lobclawRoute := apiRouter.Group("/lobclaw")
+		lobclawRoute.Use(middleware.UserAuth())
+		{
+			lobclawRoute.POST("/transaction", middleware.CriticalRateLimit(), controller.SubmitTransaction)
+			lobclawRoute.GET("/burn", controller.GetBurnRecords)
+			lobclawRoute.GET("/expenditure", controller.GetExpenditures)
+			lobclawRoute.GET("/agency", controller.GetAgencyInfo)
+			lobclawRoute.POST("/agency/apply", middleware.CriticalRateLimit(), controller.ApplyAgent)
+		}
+
 		optionRoute := apiRouter.Group("/option")
 		optionRoute.Use(middleware.RootAuth())
 		{

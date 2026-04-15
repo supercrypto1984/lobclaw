@@ -4,29 +4,31 @@ import { createWeb3Modal } from '@web3modal/wagmi/react';
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
 
 // 1. Get projectId at https://cloud.walletconnect.com
-export const projectId = '88888888888888888888888888888888'; // 请替换为你的真实 ID
+// 既然您说之前没问题，我们先用回这个 ID，确保初始化函数被调用
+export const projectId = '88888888888888888888888888888888'; 
 
 // 2. Create wagmiConfig
 const metadata = {
   name: 'LobClaw',
   description: 'The First MEME Coin for AI Power',
-  url: window.location.origin,
+  url: typeof window !== 'undefined' ? window.location.origin : '',
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 };
 
 const chains = [bsc, bscTestnet] as const;
+
 export const config = defaultWagmiConfig({
   chains,
   projectId,
   metadata,
 });
 
-// 3. Create modal
+// 3. Create modal - 必须无条件调用，否则 useWeb3Modal() 钩子会报错崩溃
 createWeb3Modal({
   wagmiConfig: config,
   projectId,
-  enableAnalytics: true, // Optional - defaults to your Cloud configuration
-  enableOnramp: true, // Optional - false as default
+  enableAnalytics: false, 
+  enableOnramp: false,
 });
 
 // 合约配置

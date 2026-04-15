@@ -13,6 +13,8 @@ import {
   Settings,
   ShieldCheck,
   Zap,
+  Flame,
+  Users,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
@@ -38,6 +40,10 @@ export default function CyberLayout({ children }: { children: React.ReactNode })
 
   const mainNav = [
     { label: t('首页'), path: '/', icon: <LayoutDashboard size={20} /> },
+    { label: t('AI 技能'), path: '/console/skills', icon: <Zap size={20} /> },
+    { label: t('收入分红'), path: '/console/revenue', icon: <Coins size={20} /> },
+    { label: t('销毁追踪'), path: '/console/burn', icon: <Flame size={20} /> },
+    { label: t('代理中心'), path: '/console/agency', icon: <Users size={20} /> },
     { label: t('充值额度'), path: '/console/topup', icon: <Coins size={20} />, badge: 'BSC' },
     { label: t('令牌管理'), path: '/console/token', icon: <ShieldCheck size={20} /> },
     { label: t('使用日志'), path: '/console/log', icon: <History size={20} /> },

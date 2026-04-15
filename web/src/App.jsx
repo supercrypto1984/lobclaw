@@ -39,6 +39,10 @@ import SetupCheck from './components/layout/SetupCheck';
 // LobClaw Components
 import CyberLayout from './components/lobclaw/CyberLayout';
 import LobClawDashboard from './pages/Home/LobClawDashboard';
+const AISkills = lazy(() => import('./pages/LobClaw/AISkills'));
+const RevenueShare = lazy(() => import('./pages/LobClaw/RevenueShare'));
+const BurnTracker = lazy(() => import('./pages/LobClaw/BurnTracker'));
+const AgencyHub = lazy(() => import('./pages/LobClaw/AgencyHub'));
 
 const About = lazy(() => import('./pages/About'));
 const UserAgreement = lazy(() => import('./pages/UserAgreement'));
@@ -92,6 +96,10 @@ function App() {
       <Route path='/console/log' element={<PrivateRoute><Log /></PrivateRoute>} />
       <Route path='/console/midjourney' element={<PrivateRoute><Suspense fallback={<Loading />}><Midjourney /></Suspense></PrivateRoute>} />
       <Route path='/console/task' element={<PrivateRoute><Suspense fallback={<Loading />}><Task /></Suspense></PrivateRoute>} />
+      <Route path='/console/skills' element={<PrivateRoute><Suspense fallback={<Loading />}><AISkills /></Suspense></PrivateRoute>} />
+      <Route path='/console/revenue' element={<PrivateRoute><Suspense fallback={<Loading />}><RevenueShare /></Suspense></PrivateRoute>} />
+      <Route path='/console/burn' element={<Suspense fallback={<Loading />}><BurnTracker /></Suspense>} />
+      <Route path='/console/agency' element={<PrivateRoute><Suspense fallback={<Loading />}><AgencyHub /></Suspense></PrivateRoute>} />
       <Route path='/console/chat/:id?' element={<Suspense fallback={<Loading />}><Chat /></Suspense>} />
       <Route path='/console' element={<PrivateRoute><Suspense fallback={<Loading />}><LobClawDashboard /></Suspense></PrivateRoute>} />
 

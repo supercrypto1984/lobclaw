@@ -50,6 +50,11 @@ type User struct {
 	Setting          string         `json:"setting" gorm:"type:text;column:setting"`
 	Remark           string         `json:"remark,omitempty" gorm:"type:varchar(255)" validate:"max=255"`
 	StripeCustomer   string         `json:"stripe_customer" gorm:"type:varchar(64);column:stripe_customer;index"`
+	WalletAddress    string         `json:"wallet_address" gorm:"column:wallet_address;index"`
+	LobclawBalance   float64        `json:"lobclaw_balance" gorm:"column:lobclaw_balance;default:0"`
+	AgentTier        string         `json:"agent_tier" gorm:"column:agent_tier;default:'none'"` // friend, agent, super_agent
+	WeightedScore    float64        `json:"weighted_score" gorm:"column:weighted_score;default:0"`
+	HoldingStartDate int64          `json:"holding_start_date" gorm:"column:holding_start_date;default:0"`
 }
 
 func (user *User) ToBaseUser() *UserBase {

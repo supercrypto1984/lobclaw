@@ -19,6 +19,9 @@ For commercial licensing, please contact support@quantumnous.com
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Buffer } from 'buffer';
+window.Buffer = Buffer;
+
 import { BrowserRouter } from 'react-router-dom';
 import '@douyinfe/semi-ui/dist/css/semi.css';
 import { UserProvider } from './context/User';
@@ -33,6 +36,13 @@ import { useTranslation } from 'react-i18next';
 import zh_CN from '@douyinfe/semi-ui/lib/es/locale/source/zh_CN';
 import en_GB from '@douyinfe/semi-ui/lib/es/locale/source/en_GB';
 
+// Web3 / EVM Integration
+import { WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { config } from './lib/lobclaw/web3-config';
+
+const queryClient = new QueryClient();
+
 // 欢迎信息（二次开发者未经允许不准将此移除）
 // Welcome message (Do not remove this without permission from the original developer)
 if (typeof window !== 'undefined') {
@@ -46,32 +56,34 @@ if (typeof window !== 'undefined') {
 function SemiLocaleWrapper({ children }) {
   const { i18n } = useTranslation();
   const semiLocale = React.useMemo(
-    () => ({ zh: zh_CN, en: en_GB })[i18n.language] || zh_CN,
+    () => ({ zh: zh_CN, en: en_GB })[i18n.language.slice(0, 2)] || zh_CN,
     [i18n.language],
   );
   return <LocaleProvider locale={semiLocale}>{children}</LocaleProvider>;
 }
 
-// initialization
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <StatusProvider>
-      <UserProvider>
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <ThemeProvider>
-            <SemiLocaleWrapper>
-              <PageLayout />
-            </SemiLocaleWrapper>
-          </ThemeProvider>
-        </BrowserRouter>
-      </UserProvider>
-    </StatusProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <StatusProvider>
+          <UserProvider>
+            <BrowserRouter
+              future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+              }}
+            >
+              <ThemeProvider>
+                <SemiLocaleWrapper>
+                  <PageLayout />
+                </SemiLocaleWrapper>
+              </ThemeProvider>
+            </BrowserRouter>
+          </UserProvider>
+        </StatusProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   </React.StrictMode>,
 );

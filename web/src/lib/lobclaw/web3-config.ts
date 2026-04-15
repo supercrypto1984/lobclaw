@@ -4,8 +4,11 @@ import { createWeb3Modal } from '@web3modal/wagmi/react';
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
 
 // 1. Get projectId at https://cloud.walletconnect.com
-// 既然您说之前没问题，我们先用回这个 ID，确保初始化函数被调用
 export const projectId = '88888888888888888888888888888888'; 
+
+// 检查是否为有效的 Project ID 以及运行环境
+const isProduction = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
+const isInvalidId = !projectId || projectId.includes('8888888');
 
 // 2. Create wagmiConfig
 const metadata = {
@@ -19,30 +22,35 @@ const chains = [bsc, bscTestnet] as const;
 
 export const config = defaultWagmiConfig({
   chains,
-  projectId,
+  projectId: isInvalidId ? '3fbb6bba663103ca781f1ad93322123c' : projectId, 
   metadata,
 });
 
-// 3. Create modal - 必须无条件调用，否则 useWeb3Modal() 钩子会报错崩溃
-createWeb3Modal({
-  wagmiConfig: config,
-  projectId,
-  enableAnalytics: false, 
-  enableOnramp: false,
-});
+// 3. Create modal - 仅在非生产环境或 ID 有效时启用真实初始化
+// 在 GitHub Pages 且 ID 无效时，跳过初始化以避免 CSP 403 报错
+if (typeof window !== 'undefined') {
+  if (!isProduction || !isInvalidId) {
+    try {
+      createWeb3Modal({
+        wagmiConfig: config,
+        projectId: isInvalidId ? '3fbb6bba663103ca781f1ad93322123c' : projectId,
+        enableAnalytics: false,
+        enableOnramp: false,
+      });
+    } catch (e) {
+      console.warn('Web3Modal init skipped:', e);
+    }
+  }
+}
 
-// 合约配置
-export const LOBCLAW_BSC_ADDRESS = '0x0000000000000000000000000000000000000000'; // LobClaw Token BSC Address
-export const USDC_BSC_ADDRESS = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d'; // USDC BSC Address
-export const TREASURY_BSC_ADDRESS = '0x0000000000000000000000000000000000000000'; // 收款钱包地址
+export const LOBCLAW_BSC_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const USDC_BSC_ADDRESS = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d';
+export const TREASURY_BSC_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const ERC20_ABI = [
   {
     constant: false,
-    inputs: [
-      { name: '_to', type: 'address' },
-      { name: '_value', type: 'uint256' },
-    ],
+    inputs: [{ name: '_to', type: 'address' }, { name: '_value', type: 'uint256' }],
     name: 'transfer',
     outputs: [{ name: '', type: 'bool' }],
     type: 'function',

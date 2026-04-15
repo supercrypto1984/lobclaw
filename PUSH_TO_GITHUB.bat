@@ -4,10 +4,14 @@ set http_proxy=http://127.0.0.1:7890
 set https_proxy=http://127.0.0.1:7890
 
 echo ============================================================
-echo LobClaw Project Upload Script (Proxy Enabled)
+echo LobClaw Project Upload Script (Super Trust Mode)
 echo ============================================================
 echo.
 cd /d %~dp0
+
+:: 解决 dubious ownership 问题
+echo Trusting directory...
+git config --global --add safe.directory %cd:\=/%
 
 :: 清理旧的 Remote
 git remote remove origin >nul 2>&1
